@@ -19,4 +19,6 @@ public class UrlModel {
     private String longURL;
     @Indexed(unique = true)
     private String shortURL;
+
+    private String userId;
 }
