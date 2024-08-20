@@ -29,7 +29,10 @@ public class SecurityConfig {
                     requests.anyRequest().authenticated();
                 })
                 .cors(Customizer.withDefaults())
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(ref -> {
+                    ref.loginPage("/oauth2/authorization/github");
+                    ref.defaultSuccessUrl("http://localhost:4200/home", true);
+                })
                 .build();
     }
 
