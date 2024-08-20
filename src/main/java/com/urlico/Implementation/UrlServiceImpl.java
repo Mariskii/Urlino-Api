@@ -47,7 +47,7 @@ public class UrlServiceImpl implements UrlService {
 
         String shortUrl = UrlUtils.generateRandomShortUrl(customUrlDTO.longUrl(),urlRepository);
 
-        shortUrl = customUrlDTO.customBody()+"/"+shortUrl;
+        shortUrl = customUrlDTO.customBody()+"-"+shortUrl;
 
         UrlModel urlModel = UrlModel.builder()
                 .shortURL(shortUrl)
