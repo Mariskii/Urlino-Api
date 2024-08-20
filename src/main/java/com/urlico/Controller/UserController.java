@@ -3,6 +3,7 @@ package com.urlico.Controller;
 import com.urlico.DTO.Response.UserResponseDTO;
 import com.urlico.Implementation.UserServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,6 @@ public class UserController {
 
     @GetMapping("user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User user) {
-        // Imprime todos los atributos disponibles del usuario
-        System.out.println(user.getName());
         return user.getAttributes();
     }
 

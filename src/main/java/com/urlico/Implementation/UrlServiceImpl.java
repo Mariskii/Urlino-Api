@@ -2,13 +2,17 @@ package com.urlico.Implementation;
 
 import com.urlico.DTO.Request.CustomUrlDTO;
 import com.urlico.DTO.Response.CustomUrlResponseDTO;
+import com.urlico.DTO.Response.PageResponseDTO;
 import com.urlico.DTO.Response.ShortURLDTO;
+import com.urlico.Mapper.PageMapper;
 import com.urlico.Mapper.UrlMapper;
 import com.urlico.Models.UrlModel;
 import com.urlico.Repository.UrlRepository;
 import com.urlico.Service.UrlService;
 import com.urlico.Utils.UrlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -52,5 +56,12 @@ public class UrlServiceImpl implements UrlService {
                 .build();
 
         return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
+    }
+
+    @Override
+    public PageResponseDTO<CustomUrlResponseDTO> getUserUrl(Pageable pageable, String userId) {
+        return PageMapper.createPageResponse(
+                urlRepository.findAllUrlModelByUserId(userId,pageable).map(UrlMapper::buildCustomUrlResponeDTO)
+        );
     }
 }
