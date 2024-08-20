@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api")
 public class UrlController {
     @Autowired
     private UrlServiceImpl urlService;
@@ -23,7 +23,7 @@ public class UrlController {
         return ResponseEntity.ok(urlService.shortUrl(url));
     }
 
-    @GetMapping("/{shortUrl}")
+    @GetMapping("{shortUrl}")
     public ResponseEntity<Void> redirectUrl(@PathVariable String shortUrl) {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(urlService.redirectToLongUrl(shortUrl)))
