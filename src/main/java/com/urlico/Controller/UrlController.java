@@ -1,5 +1,7 @@
 package com.urlico.Controller;
 
+import com.urlico.DTO.Request.CustomUrlDTO;
+import com.urlico.DTO.Response.CustomUrlResponseDTO;
 import com.urlico.DTO.Response.ShortURLDTO;
 import com.urlico.Implementation.UrlServiceImpl;
 import com.urlico.Models.UrlModel;
@@ -28,5 +30,10 @@ public class UrlController {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(urlService.redirectToLongUrl(shortUrl)))
                 .build();
+    }
+
+    @PostMapping("custom-url")
+    public ResponseEntity<CustomUrlResponseDTO> getCustomUrl(@RequestBody CustomUrlDTO customUrl) {
+        return ResponseEntity.ok(urlService.buildCustomUrl(customUrl));
     }
 }
