@@ -12,4 +12,6 @@ public interface UrlService {
     String redirectToLongUrl(String shortURL);
     CustomUrlResponseDTO buildCustomUrl(CustomUrlDTO customUrlDTO);
     PageResponseDTO<CustomUrlResponseDTO> getUserUrl(Pageable pageable, String userId);
+    PageResponseDTO<CustomUrlResponseDTO> getUserUrlByShortUrl(Pageable pageable, String shortUrl, String userId);
+    void deleteUrlById(String id);
 }

@@ -64,4 +64,16 @@ public class UrlServiceImpl implements UrlService {
                 urlRepository.findAllUrlModelByUserId(userId,pageable).map(UrlMapper::buildCustomUrlResponeDTO)
         );
     }
+
+    @Override
+    public PageResponseDTO<CustomUrlResponseDTO> getUserUrlByShortUrl(Pageable pageable, String shortUrl, String userId) {
+        return PageMapper.createPageResponse(
+                urlRepository.findAllByShortURLContainingAndUserId(shortUrl, userId,pageable).map(UrlMapper::buildCustomUrlResponeDTO)
+        );
+    }
+
+    @Override
+    public void deleteUrlById(String id) {
+        urlRepository.deleteById(id);
+    }
 }

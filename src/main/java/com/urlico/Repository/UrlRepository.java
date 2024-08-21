@@ -9,4 +9,5 @@ public interface UrlRepository extends MongoRepository<UrlModel, String> {
     UrlModel findByShortURL(String url);
     boolean existsUrlModelByShortURL(String shortURL);
     Page<UrlModel> findAllUrlModelByUserId(String userId, Pageable pageable);
+    Page<UrlModel> findAllByShortURLContainingAndUserId(String shortUrl, String userId, Pageable pageable);
 }

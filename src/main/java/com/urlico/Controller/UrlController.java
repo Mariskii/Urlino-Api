@@ -43,8 +43,19 @@ public class UrlController {
         return ResponseEntity.ok(urlService.buildCustomUrl(customUrl));
     }
 
+    @DeleteMapping("delete-by-id")
+    public ResponseEntity<?> deleteCustomUrl(@RequestParam String id) {
+        urlService.deleteUrlById(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("user-urls")
-    public ResponseEntity<PageResponseDTO<CustomUrlResponseDTO>> users(@AuthenticationPrincipal OAuth2User user, Pageable pageable) {
+    public ResponseEntity<PageResponseDTO<CustomUrlResponseDTO>> getUserUrls(@AuthenticationPrincipal OAuth2User user, Pageable pageable) {
         return ResponseEntity.ok(urlService.getUserUrl(pageable,user.getName()));
+    }
+
+    @GetMapping("user-urls-by-short-url")
+    public ResponseEntity<PageResponseDTO<CustomUrlResponseDTO>> getUserUrlsByShortUrl(@AuthenticationPrincipal OAuth2User user, @RequestParam String shortUrl, Pageable pageable) {
+        return ResponseEntity.ok(urlService.getUserUrlByShortUrl(pageable, shortUrl, user.getName()));
     }
 }
