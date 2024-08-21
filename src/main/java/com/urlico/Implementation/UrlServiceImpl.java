@@ -4,12 +4,14 @@ import com.urlico.DTO.Request.CustomUrlDTO;
 import com.urlico.DTO.Response.CustomUrlResponseDTO;
 import com.urlico.DTO.Response.PageResponseDTO;
 import com.urlico.DTO.Response.ShortURLDTO;
+import com.urlico.Exceptions.Errors.UrlNotValidException;
 import com.urlico.Mapper.PageMapper;
 import com.urlico.Mapper.UrlMapper;
 import com.urlico.Models.UrlModel;
 import com.urlico.Repository.UrlRepository;
 import com.urlico.Service.UrlService;
 import com.urlico.Utils.UrlUtils;
+import com.urlico.Utils.ValidatorURL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,18 +28,22 @@ public class UrlServiceImpl implements UrlService {
     UrlRepository urlRepository;
 
     @Override
-    public ShortURLDTO shortUrl(String longUrl) {
+    public ShortURLDTO shortUrl(String longUrl) throws UrlNotValidException {
 
-        String shortUrl = UrlUtils.generateRandomShortUrl(longUrl,urlRepository);
+        if(ValidatorURL.isUrlValid(longUrl)) {
+            String shortUrl = UrlUtils.generateRandomShortUrl(longUrl,urlRepository);
 
-        UrlModel url = UrlModel.builder()
-                .longURL(longUrl)
-                .shortURL(shortUrl)
-                .shortURLKey(shortUrl)
-                .build();
+            UrlModel url = UrlModel.builder()
+                    .longURL(longUrl)
+                    .shortURL(shortUrl)
+                    .shortURLKey(shortUrl)
+                    .build();
 
-        UrlModel urlModel = urlRepository.save(url);
-        return new ShortURLDTO(urlModel.getShortURL());
+            UrlModel urlModel = urlRepository.save(url);
+            return new ShortURLDTO(urlModel.getShortURL());
+        } else  {
+            throw new UrlNotValidException("The provided url is not valid");
+        }
     }
 
     @Override
@@ -47,23 +53,27 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public CustomUrlResponseDTO buildCustomUrl(CustomUrlDTO customUrlDTO) {
+    public CustomUrlResponseDTO buildCustomUrl(CustomUrlDTO customUrlDTO) throws UrlNotValidException {
 
-        String shortUrlKey = UrlUtils.generateRandomShortUrl(customUrlDTO.longUrl(),urlRepository);
+        if(ValidatorURL.isUrlValid(customUrlDTO.longUrl())) {
+            String shortUrlKey = UrlUtils.generateRandomShortUrl(customUrlDTO.longUrl(),urlRepository);
 
-        UrlModel urlModel = UrlModel.builder()
-                .shortURL(shortUrlKey)
-                .shortURLKey(shortUrlKey)
-                .longURL(customUrlDTO.longUrl())
-                .userId(customUrlDTO.userId())
-                .build();
+            UrlModel urlModel = UrlModel.builder()
+                    .shortURL(shortUrlKey)
+                    .shortURLKey(shortUrlKey)
+                    .longURL(customUrlDTO.longUrl())
+                    .userId(customUrlDTO.userId())
+                    .build();
 
-        if(!customUrlDTO.customBody().isBlank()) {
-            String shortUrl = customUrlDTO.customBody()+"-"+shortUrlKey;
-            urlModel.setShortURL(shortUrl);
+            if(customUrlDTO.customBody() != null && !customUrlDTO.customBody().isBlank()) {
+                String shortUrl = customUrlDTO.customBody().replace(" ","")+"-"+shortUrlKey;
+                urlModel.setShortURL(shortUrl);
+            }
+
+            return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
+        } else {
+            throw new UrlNotValidException("The provided url is not valid");
         }
-
-        return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
     }
 
     @Override

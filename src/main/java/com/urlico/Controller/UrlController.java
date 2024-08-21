@@ -5,6 +5,7 @@ import com.urlico.DTO.Response.CustomUrlResponseDTO;
 import com.urlico.DTO.Response.PageResponseDTO;
 import com.urlico.DTO.Response.ShortURLDTO;
 import com.urlico.DTO.Response.UserResponseDTO;
+import com.urlico.Exceptions.Errors.UrlNotValidException;
 import com.urlico.Implementation.UrlServiceImpl;
 import com.urlico.Models.UrlModel;
 import com.urlico.Service.UrlService;
@@ -27,7 +28,7 @@ public class UrlController {
     private UrlServiceImpl urlService;
 
     @PostMapping("shorten")
-    public ResponseEntity<ShortURLDTO> getShortURL(@RequestParam("url") String url) {
+    public ResponseEntity<ShortURLDTO> getShortURL(@RequestParam("url") String url) throws UrlNotValidException {
         return ResponseEntity.ok(urlService.shortUrl(url));
     }
 
@@ -39,7 +40,7 @@ public class UrlController {
     }
 
     @PostMapping("custom-url")
-    public ResponseEntity<CustomUrlResponseDTO> getCustomUrl(@RequestBody CustomUrlDTO customUrl) {
+    public ResponseEntity<CustomUrlResponseDTO> getCustomUrl(@RequestBody CustomUrlDTO customUrl) throws UrlNotValidException {
         return ResponseEntity.ok(urlService.buildCustomUrl(customUrl));
     }
 
