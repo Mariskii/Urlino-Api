@@ -27,9 +27,13 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public ShortURLDTO shortUrl(String longUrl) {
+
+        String shortUrl = UrlUtils.generateRandomShortUrl(longUrl,urlRepository);
+
         UrlModel url = UrlModel.builder()
                 .longURL(longUrl)
-                .shortURL(UrlUtils.generateRandomShortUrl(longUrl,urlRepository))
+                .shortURL(shortUrl)
+                .shortURLKey(shortUrl)
                 .build();
 
         UrlModel urlModel = urlRepository.save(url);
@@ -45,15 +49,19 @@ public class UrlServiceImpl implements UrlService {
     @Override
     public CustomUrlResponseDTO buildCustomUrl(CustomUrlDTO customUrlDTO) {
 
-        String shortUrl = UrlUtils.generateRandomShortUrl(customUrlDTO.longUrl(),urlRepository);
-
-        shortUrl = customUrlDTO.customBody()+"-"+shortUrl;
+        String shortUrlKey = UrlUtils.generateRandomShortUrl(customUrlDTO.longUrl(),urlRepository);
 
         UrlModel urlModel = UrlModel.builder()
-                .shortURL(shortUrl)
+                .shortURL(shortUrlKey)
+                .shortURLKey(shortUrlKey)
                 .longURL(customUrlDTO.longUrl())
                 .userId(customUrlDTO.userId())
                 .build();
+
+        if(!customUrlDTO.customBody().isBlank()) {
+            String shortUrl = customUrlDTO.customBody()+"-"+shortUrlKey;
+            urlModel.setShortURL(shortUrl);
+        }
 
         return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
     }

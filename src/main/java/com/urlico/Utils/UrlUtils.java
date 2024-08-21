@@ -30,7 +30,7 @@ public class UrlUtils {
         int numberOfCharsInHash=hash.length();
         int counter=0;
         while(counter < numberOfCharsInHash-SHORT_URL_CHAR_SIZE){
-            if(!urlRepository.existsUrlModelByShortURL(hash.substring(counter, counter+SHORT_URL_CHAR_SIZE))){
+            if(!urlRepository.existsUrlModelByShortURLKey(hash.substring(counter, counter+SHORT_URL_CHAR_SIZE))){
                 return hash.substring(counter, counter+SHORT_URL_CHAR_SIZE);
             }
             counter++;
