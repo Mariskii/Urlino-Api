@@ -1,10 +1,8 @@
 package com.urlico.Controller;
 
 import com.urlico.DTO.Request.CustomUrlDTO;
-import com.urlico.DTO.Response.CustomUrlResponseDTO;
-import com.urlico.DTO.Response.PageResponseDTO;
-import com.urlico.DTO.Response.ShortURLDTO;
-import com.urlico.DTO.Response.UserResponseDTO;
+import com.urlico.DTO.Response.*;
+import com.urlico.Exceptions.Errors.UrlIdDoesntExistException;
 import com.urlico.Exceptions.Errors.UrlNotValidException;
 import com.urlico.Implementation.UrlServiceImpl;
 import com.urlico.Models.UrlModel;
@@ -58,5 +56,10 @@ public class UrlController {
     @GetMapping("user-urls-by-short-url")
     public ResponseEntity<PageResponseDTO<CustomUrlResponseDTO>> getUserUrlsByShortUrl(@AuthenticationPrincipal OAuth2User user, @RequestParam String shortUrl, Pageable pageable) {
         return ResponseEntity.ok(urlService.getUserUrlByShortUrl(pageable, shortUrl, user.getName()));
+    }
+
+    @PutMapping("update-user-url")
+    public ResponseEntity<CustomUrlResponseDTO> updateUserUrl(@RequestBody UpdateUrlDTO updateUrlDTO) throws UrlIdDoesntExistException, UrlNotValidException {
+        return ResponseEntity.ok(urlService.updateCustomUrl(updateUrlDTO));
     }
 }

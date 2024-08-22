@@ -19,6 +19,7 @@ public class UrlModel {
     private String longURL;
     @Indexed(unique = true)
     private String shortURL;
+    private String customBody;
     private String shortURLKey;
 
     private String userId;

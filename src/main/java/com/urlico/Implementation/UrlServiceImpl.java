@@ -4,6 +4,8 @@ import com.urlico.DTO.Request.CustomUrlDTO;
 import com.urlico.DTO.Response.CustomUrlResponseDTO;
 import com.urlico.DTO.Response.PageResponseDTO;
 import com.urlico.DTO.Response.ShortURLDTO;
+import com.urlico.DTO.Response.UpdateUrlDTO;
+import com.urlico.Exceptions.Errors.UrlIdDoesntExistException;
 import com.urlico.Exceptions.Errors.UrlNotValidException;
 import com.urlico.Mapper.PageMapper;
 import com.urlico.Mapper.UrlMapper;
@@ -68,6 +70,7 @@ public class UrlServiceImpl implements UrlService {
             if(customUrlDTO.customBody() != null && !customUrlDTO.customBody().isBlank()) {
                 String shortUrl = customUrlDTO.customBody().replace(" ","")+"-"+shortUrlKey;
                 urlModel.setShortURL(shortUrl);
+                urlModel.setCustomBody(customUrlDTO.customBody());
             }
 
             return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
@@ -75,6 +78,24 @@ public class UrlServiceImpl implements UrlService {
             throw new UrlNotValidException("The provided url is not valid");
         }
     }
+
+    @Override
+    public CustomUrlResponseDTO updateCustomUrl(UpdateUrlDTO updateUrlDTO) throws UrlNotValidException, UrlIdDoesntExistException {
+        if(ValidatorURL.isUrlValid(updateUrlDTO.longUrl())) {
+            UrlModel urlModel = urlRepository.findById(updateUrlDTO.id()).orElseThrow(
+                    () -> new UrlIdDoesntExistException("The provided url is not valid")
+            );
+
+            urlModel.setLongURL(updateUrlDTO.longUrl());
+            urlModel.setCustomBody(updateUrlDTO.shortURL());
+            urlModel.setShortURL(updateUrlDTO.shortURL()+"-"+urlModel.getShortURLKey());
+
+            return UrlMapper.buildCustomUrlResponeDTO(urlRepository.save(urlModel));
+        } else {
+            throw new UrlNotValidException("The provided url is not valid");
+        }
+    }
+
 
     @Override
     public PageResponseDTO<CustomUrlResponseDTO> getUserUrl(Pageable pageable, String userId) {
