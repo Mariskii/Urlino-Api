@@ -27,6 +27,10 @@ public class SecurityConfig {
                     requests.requestMatchers("api/**").permitAll();
                     requests.requestMatchers("/user").authenticated();
                     requests.requestMatchers("api/user-urls").authenticated();
+                    requests.requestMatchers("api/custom-url").authenticated();
+                    requests.requestMatchers("api/delete-by-id").authenticated();
+                    requests.requestMatchers("api/user-urls-by-short-url").authenticated();
+                    requests.requestMatchers("api/update-user-url").authenticated();
                     requests.anyRequest().authenticated();
                 })
                 .cors(Customizer.withDefaults())
