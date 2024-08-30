@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .oauth2Login(ref -> {
                     ref.loginPage("/oauth2/authorization/github");
-                    ref.defaultSuccessUrl("http://localhost:4200/home", true);
+                    ref.defaultSuccessUrl("https://66d1cd3a2b9c542fd2098c7f--urlino.netlify.app/home", true);
                 })
                 .build();
     }
