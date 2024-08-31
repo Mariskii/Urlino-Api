@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .oauth2Login(ref -> {
                     ref.loginPage("/oauth2/authorization/github");
-                    ref.defaultSuccessUrl("https://urlino.netlify.app/home", true);
+                    ref.defaultSuccessUrl("https://urlino.net/home", true);
                 })
                 .build();
     }
@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200",  "https://urlino.netlify.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://urlino.icu", "https://urlino.net"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
